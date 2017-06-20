@@ -11,4 +11,9 @@ public class MoneyTest {
         assertThat(new Money(3,50).add(new Money(4,20))).isEqualTo(new Money(7,70));
     }
 
+    @Test
+    public void multiply_money() {
+        assertThat(new Money(3,50).multiply(2)).isEqualTo(new Money(7,0));
+    }
+
 }

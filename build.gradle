@@ -31,6 +31,7 @@ dependencies {
     compile('org.apache.commons:commons-lang3:3.4')
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-web')
+    compileOnly "org.projectlombok:lombok:1.16.16"
     runtime('com.h2database:h2')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }

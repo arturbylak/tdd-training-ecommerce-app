@@ -1,5 +1,7 @@
 package pl.pragmatists.trainings.ecommerce.cart;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import pl.pragmatists.trainings.ecommerce.common.Money;
@@ -7,28 +9,35 @@ import pl.pragmatists.trainings.ecommerce.product.persistence.Product;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
+@Getter
+@Setter
 public class CartItem {
 
     @Id
-    private long productId;
+    @GeneratedValue
+    private long id;
+
+    @ManyToOne
+    private Product product;
 
     @Embedded
     private Money price;
 
     private int quantity;
+
     @ManyToOne
     Cart cart;
 
     private CartItem() {
 
     }
-
     public CartItem(Product product, int quantity) {
-        this.productId = product.getId();
+        this.product = product;
         this.price = product.getPrice();
         this.quantity = quantity;
     }
@@ -46,7 +55,7 @@ public class CartItem {
         CartItem cartItem = (CartItem) o;
 
         return new EqualsBuilder()
-                .append(productId, cartItem.productId)
+                .append(product, cartItem.product)
                 .append(price, cartItem.price)
                 .append(quantity, cartItem.quantity)
                 .isEquals();
@@ -55,13 +64,21 @@ public class CartItem {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(productId)
+                .append(product)
                 .append(price)
                 .append(quantity)
                 .toHashCode();
     }
 
-    public Money getPrice() {
-        return price;
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    Money getPrice() {
+        return price.multiply(getQuantity());
     }
 }

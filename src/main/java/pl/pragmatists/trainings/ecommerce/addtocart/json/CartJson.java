@@ -4,6 +4,7 @@ import java.util.List;
 
 public class CartJson {
     public String total;
+    public long shipping;
 
     public CartJson() {
 

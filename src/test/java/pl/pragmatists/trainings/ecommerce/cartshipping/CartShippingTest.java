@@ -1,4 +1,4 @@
-package pl.pragmatists.trainings.ecommerce.carttotal;
+package pl.pragmatists.trainings.ecommerce.cartshipping;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,8 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 @AutoConfigureTestEntityManager
-public class CartTotalTest {
-
+public class CartShippingTest {
     @Autowired
     private MockMvc mvc;
 
@@ -34,30 +33,16 @@ public class CartTotalTest {
     private TestEntityManager em;
 
     @Test
-    public void total_for_one_product() throws Exception {
+    public void check_fixed_shipping_cost() throws Exception {
+        //given
         Product handkerchief = em.persistAndFlush(new Product(1L, "handkerchief", new Money(3, 50)));
         CartItem handkerchiefInCart = new CartItem(handkerchief, 1);
-        em.persistAndFlush(new Cart(5L).withItems(newArrayList(handkerchiefInCart)));
+        em.persistAndFlush(new Cart(6L).withItems(newArrayList(handkerchiefInCart)));
 
-        mvc.perform(get("/user/5/cart"))
-
+        //when
+        mvc.perform(get("/user/6/cart"))
+                //then
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.total").value("3,50"));
-
+                .andExpect(jsonPath("$.shipping ").value("15"));
     }
-
-    @Test
-    public void total_for_different_quantities() throws Exception {
-        Product handkerchief = em.persistAndFlush(new Product(1L, "handkerchief", new Money(3, 50)));
-        Product cup = em.persistAndFlush(new Product(2L, "cup", new Money(5, 0)));
-        CartItem handkerchiefInCart = new CartItem(handkerchief, 2);
-        CartItem cupInCart = new CartItem(cup, 2);
-        em.persistAndFlush(new Cart(5L).withItems(newArrayList(handkerchiefInCart,cupInCart)));
-
-        mvc.perform(get("/user/5/cart"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.total").value("17,0"));
-
-    }
-
 }

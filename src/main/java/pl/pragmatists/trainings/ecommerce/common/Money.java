@@ -46,4 +46,9 @@ public class Money {
     public String toString() {
         return moneyAsCents/100 + ","+moneyAsCents % 100;
     }
+
+    public Money multiply(int times) {
+        int cents = this.moneyAsCents * times;
+        return new Money(cents / 100, cents % 100);
+    }
 }
